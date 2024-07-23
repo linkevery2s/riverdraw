@@ -1,110 +1,174 @@
 <!DOCTYPE HTML>
 <html lang="ja">
-<title>日本の都道府県を川だけで描いてみる</title>
+<title>日本の都道府県を河川だけで描いてみる</title>
+
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
-	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+	<meta charset="UTF-8" name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta property="og:title" content="日本の都道府県を川だけで描いてみる" />
+	<meta property="og:title" content="日本の都道府県を河川だけで描いてみる" />
 	<meta property="og:type" content="website" />
-	<meta property="og:image" content="https://riverdraw47.netlify.app/ogp.jpg" />
-	<meta name="description" content="日本の川は細く長いのが特徴です。山から流れ出した流れは、どこかの海、海岸にたどり着きます。いかに川が多いかを表現するため、日本の各都道府県を川だけで描いてみました。人間にとって、欠かせない水の有難さ。心に感じてもらえれば幸いです。" />
+	<meta property="og:image" content="https://riverdraw47.netlify.app/ogp.png" />
+	<meta name="description"
+		content="日本の川は細く長いのが特徴です。山から流れ出した流れは、どこかの海、海岸にたどり着きます。いかに川が多いかを表現するため、日本の各都道府県を川だけで描いてみました。人間にとって、欠かせない水の有難さ。心に感じてもらえれば幸いです。" />
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="日本の都道府県を川だけで描いてみる" />
-	<meta name="twitter:image" content="https://riverdraw47.netlify.app/ogp.jpg" />
-	<meta name="author" content="仁志">
-	<meta name="keywords" content="日本,川,河川,日本列島,geojson,topojson"/>
+	<meta name="twitter:title" content="日本の都道府県を河川だけで描いてみる" />
+	<meta name="twitter:image" content="https://riverdraw47.netlify.app/ogp.png" />
+	<meta name="author" content="Saito Hitoshi">
+	<meta name="keywords" content="日本,川,河川,日本列島,geojson" />
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+	<link rel="icon" href="./apple-touch-icon.png">
 	<script src="https://cdn.tailwindcss.com"></script>
 
 	<style>
-		html,body{
+		html,
+		body {
 			width: 100%;
 			height: 100%;
 			margin: 0;
 			padding: 0;
 		}
 
-		#header{
+		body {
+			background-attachment: fixed;
+			background-image: url("./back.jpg");
+			background-position: top center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif
+		}
+
+		/* iOS用  */
+		body::before {
+			content: "";
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			width: 100%;
+			height: 100vh;
+			background-repeat: no-repeat;
+			background-position: top center;
+			background-image: url("./back.jpg");
+			background-size: cover;
+		}
+
+		#header,
+		#footer {
 			background: #1e50a2;
 			color: #ffffff;
 		}
 
-		#hokkaido{
+		#footer a {
+			border-bottom: 1px dotted #ffffff;
+		}
+
+		#manual_h3 {
+			border-bottom: 3px dotted #1e50a2;
+			padding-bottom: 3px;
+		}
+
+		#hokkaido {
 			background: #f43f5e;
 			color: #ffffff;
 			cursor: pointer;
 		}
 
-		#tohoku{
+		#tohoku {
 			background: #f6ad49;
 			color: #000000;
 			cursor: pointer;
 		}
 
-		#kanto{
+		#kanto {
 			background: #c7dc68;
 			cursor: pointer;
 		}
 
-		#tyubu{
+		#tyubu {
 			background: #98d98e;
 			cursor: pointer;
 		}
 
-		#kansai{
+		#kansai {
 			background: #a0d8ef;
 			cursor: pointer;
 		}
 
-		#tyugoku{
+		#tyugoku {
 			background: #1e50a2;
 			color: #ffffff;
 			cursor: pointer;
 		}
 
-		#shikoku{
+		#shikoku {
 			background: #884898;
 			color: #ffffff;
 			cursor: pointer;
 		}
 
-		#kyusyu{
+		#kyusyu {
 			background: #eb6ea5;
 			color: #ffffff;
 			cursor: pointer;
 		}
 
-		#description{
+		#description {
 			width: 95%;
 			max-width: 800px;
-			border: 3px solid #1e50a2;
+			background: rgba(255, 255, 255, .8);
 			border-radius: .5em;
 		}
 
-		#description a{
+		#description a {
 			border-bottom: 2px dotted #3fb1a3;
 			color: #3fb1a3;
 			padding-bottom: 2px;
 		}
 
-		#description a:hover{
+		#description a:hover {
 			border-bottom: none;
-			color: #1e50a2;	
+			color: #1e50a2;
+		}
+
+		#menu div {
+			font-size: 0.65rem;
+			line-height: 2rem;
+		}
+
+		#menu {
+			background: rgba(255, 255, 255, .8);
 		}
 
 		@media screen and (min-width: 768px) {
-			#header br{
+			#header br {
 				display: none;
+			}
+
+			#menu div {
+				font-size: 1.125rem;
+				line-height: 2rem;
+			}
+
+			iframe {
+				height: 100% !important;
 			}
 		}
 
-		.grid div{
-			text-align: justify;
-			text-align-last: justify;
+		.map {
+			padding: 0.75rem;
+			background: rgba(255, 255, 255, .8);
 		}
 
+		iframe {
+			padding: 0;
+			margin: 0;
+			height: 450px;
+		}
 	</style>
 	<script type="module">
-		
+
 		const online_pref = new Array(47);
 		online_pref[1] = 'hokkaido';
 		online_pref[2] = 'aomori';
@@ -154,8 +218,9 @@
 		online_pref[46] = 'kagoshima';
 		online_pref[47] = 'okinawa';
 
-		window.prefselect = (x) => {		
-			document.getElementById("river").innerHTML = '<iframe width="100%" height="450px" scrolling="no" frameborder="no" src="./pref/' + online_pref[x] + '.html"></iframe>';
+		window.prefselect = (x) => {
+			document.getElementById("river").innerHTML = '<iframe width="100%" scrolling="no" frameborder="no" src="./pref/' + online_pref[x] + '.html"></iframe>';
+			document.querySelector(".map").style.padding = "0";
 		}
 
 	</script>
@@ -164,93 +229,154 @@
 <body>
 
 	<div id="header" class="text-center">
-		<h1 class="text-3xl py-4">日本の都道府県を<br>川だけで描いてみる</h1>
+		<h1 class="text-3xl py-4">日本の都道府県を<br>河川だけで描いてみる</h1>
 	</div>
 
 	<div class="md:flex flex-row mb-5">
 
-		<div id="menu" class="basis-1/2 px-1 m-0">
+		<div id="menu" class="basis-1/2 px-1 mt-3 md:ml-3">
 
-			<div class="grid grid-cols-7 gap-1">
-				<div id="hokkaido" onclick="prefselect(1)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">北海道</div>
-				<div id="tohoku" onclick="prefselect(2)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">青森</div>
-				<div id="tohoku" onclick="prefselect(3)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">秋田</div>
-				<div id="tohoku" onclick="prefselect(4)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">岩手</div>
-				<div id="tohoku" onclick="prefselect(5)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">山形</div>
-				<div id="tohoku" onclick="prefselect(6)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">宮城</div>
-				<div id="tohoku" onclick="prefselect(7)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">福島</div>
-				<div id="kanto" onclick="prefselect(8)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">栃木</div>
-				<div id="kanto" onclick="prefselect(9)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">茨城</div>
-				<div id="kanto" onclick="prefselect(10)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">群馬</div>
-				<div id="kanto" onclick="prefselect(11)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">千葉</div>
-				<div id="kanto" onclick="prefselect(12)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">東京</div>
-				<div id="kanto" onclick="prefselect(13)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">神奈川</div>
-				<div id="kanto" onclick="prefselect(14)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">埼玉</div>
-				<div id="tyubu" onclick="prefselect(15)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">富山</div>
-				<div id="tyubu" onclick="prefselect(16)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">石川</div>
-				<div id="tyubu" onclick="prefselect(17)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">福井</div>
-				<div id="tyubu" onclick="prefselect(18)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">新潟</div>
-				<div id="tyubu" onclick="prefselect(19)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">長野</div>
-				<div id="tyubu" onclick="prefselect(20)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">山梨</div>
-				<div id="tyubu" onclick="prefselect(21)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">静岡</div>
-				<div id="tyubu" onclick="prefselect(22)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">岐阜</div>
-				<div id="tyubu" onclick="prefselect(23)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">愛知</div>
-				<div id="tyubu" onclick="prefselect(24)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">三重</div>
-				<div id="kansai" onclick="prefselect(25)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">滋賀</div>
-				<div id="kansai" onclick="prefselect(26)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">京都</div>
-				<div id="kansai" onclick="prefselect(27)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">奈良</div>
-				<div id="kansai" onclick="prefselect(28)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">和歌山</div>
-				<div id="kansai" onclick="prefselect(29)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">兵庫</div>
-				<div id="kansai" onclick="prefselect(30)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">大阪府</div>
-				<div id="tyugoku" onclick="prefselect(31)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">鳥取</div>
-				<div id="tyugoku" onclick="prefselect(32)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">岡山</div>
-				<div id="tyugoku" onclick="prefselect(33)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">広島</div>
-				<div id="tyugoku" onclick="prefselect(34)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">島根</div>
-				<div id="tyugoku" onclick="prefselect(35)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">山口</div>
-				<div id="shikoku" onclick="prefselect(36)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">香川</div>
-				<div id="shikoku" onclick="prefselect(37)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">愛媛</div>
-				<div id="shikoku" onclick="prefselect(38)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">徳島</div>
-				<div id="shikoku" onclick="prefselect(39)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">高知</div>
-				<div id="kyusyu" onclick="prefselect(40)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">福岡</div>
-				<div id="kyusyu" onclick="prefselect(41)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">長崎</div>
-				<div id="kyusyu" onclick="prefselect(42)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg rounded-md">大分</div>
-				<div id="kyusyu" onclick="prefselect(43)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">佐賀</div>
-				<div id="kyusyu" onclick="prefselect(44)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">宮崎</div>
-				<div id="kyusyu" onclick="prefselect(45)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">熊本</div>
-				<div id="kyusyu" onclick="prefselect(46)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">鹿児島</div>
-				<div id="kyusyu" onclick="prefselect(47)" class="text-center text-xs p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">沖縄</div>
+			<div class="grid grid-cols-7 grid-rows-7 gap-1">
+				<div id="hokkaido" onclick="prefselect(1)"
+					class="text-center p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">北海道</div>
+				<div id="tohoku" onclick="prefselect(2)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">青森</div>
+				<div id="tohoku" onclick="prefselect(3)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">秋田</div>
+				<div id="tohoku" onclick="prefselect(4)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">岩手</div>
+				<div id="tohoku" onclick="prefselect(5)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">山形</div>
+				<div id="tohoku" onclick="prefselect(6)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">宮城</div>
+				<div id="tohoku" onclick="prefselect(7)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">福島</div>
+				<div id="kanto" onclick="prefselect(8)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					栃木</div>
+				<div id="kanto" onclick="prefselect(9)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					茨城</div>
+				<div id="kanto" onclick="prefselect(10)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					群馬</div>
+				<div id="kanto" onclick="prefselect(11)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					千葉</div>
+				<div id="kanto" onclick="prefselect(12)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					東京</div>
+				<div id="kanto" onclick="prefselect(13)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					神奈川</div>
+				<div id="kanto" onclick="prefselect(14)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					埼玉</div>
+				<div id="tyubu" onclick="prefselect(15)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					富山</div>
+				<div id="tyubu" onclick="prefselect(16)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					石川</div>
+				<div id="tyubu" onclick="prefselect(17)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					福井</div>
+				<div id="tyubu" onclick="prefselect(18)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					新潟</div>
+				<div id="tyubu" onclick="prefselect(19)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					長野</div>
+				<div id="tyubu" onclick="prefselect(20)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					山梨</div>
+				<div id="tyubu" onclick="prefselect(21)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					静岡</div>
+				<div id="tyubu" onclick="prefselect(22)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					岐阜</div>
+				<div id="tyubu" onclick="prefselect(23)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					愛知</div>
+				<div id="tyubu" onclick="prefselect(24)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+					三重</div>
+				<div id="kansai" onclick="prefselect(25)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">滋賀</div>
+				<div id="kansai" onclick="prefselect(26)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">京都</div>
+				<div id="kansai" onclick="prefselect(27)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">奈良</div>
+				<div id="kansai" onclick="prefselect(28)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">和歌山</div>
+				<div id="kansai" onclick="prefselect(29)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">兵庫</div>
+				<div id="kansai" onclick="prefselect(30)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">大阪府</div>
+				<div id="tyugoku" onclick="prefselect(31)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">鳥取</div>
+				<div id="tyugoku" onclick="prefselect(32)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">岡山</div>
+				<div id="tyugoku" onclick="prefselect(33)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">広島</div>
+				<div id="tyugoku" onclick="prefselect(34)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">島根</div>
+				<div id="tyugoku" onclick="prefselect(35)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">山口</div>
+				<div id="shikoku" onclick="prefselect(36)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">香川</div>
+				<div id="shikoku" onclick="prefselect(37)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">愛媛</div>
+				<div id="shikoku" onclick="prefselect(38)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">徳島</div>
+				<div id="shikoku" onclick="prefselect(39)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">高知</div>
+				<div id="kyusyu" onclick="prefselect(40)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">福岡</div>
+				<div id="kyusyu" onclick="prefselect(41)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">長崎</div>
+				<div id="kyusyu" onclick="prefselect(42)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">大分</div>
+				<div id="kyusyu" onclick="prefselect(43)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">佐賀</div>
+				<div id="kyusyu" onclick="prefselect(44)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">宮崎</div>
+				<div id="kyusyu" onclick="prefselect(45)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">熊本</div>
+				<div id="kyusyu" onclick="prefselect(46)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">鹿児島</div>
+				<div id="kyusyu" onclick="prefselect(47)"
+					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">沖縄</div>
 
 			</div>
 
 		</div>
 
-		<div class="basis-1/2 p-0 m-0">
-			<span id="river"></span>
+		<div class="basis-1/2 m-3 map">
+			<span id="river">地図をタップすると、ここにマップが表示されます。（ロードされるのに少し時間がかかります。）</span>
 		</div>
 
 	</div>
 
 	<center>
-		<div id ="description" class="text-left p-5 mb-5">
-			☆ 作ろうと思った「きっかけ」<br>
-			水は山から湧き出て、川を作り、そこを下り、海や海岸へ流れます。つまり、河川を可視化すると日本列島が浮かび上がってくるのでは？という思考のもと、実行して作ったのが、このWEBサービスです。<br><br>
-			☆ 出典<br>
-			・<a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W05.html" target="_blank">国土数値情報 河川データ</a>、国土交通省のデータを<a href="https://hitoshi2s.netlify.app/" target="_blank">仁志</a>が加工・編集して、開発しました。<br>
-			・<a href="https://github.com/tabularmaps/areamap" target="_blank">都道府県カラム</a>
-
+		<div id="description" class="text-left p-5 mb-5">
+			<h3 id="manual_h3" class="text-xl">作ろうと思った「きっかけ」</h3>
+			<p class="mt-5">水は山から湧き出て、川を作り、そこを下り、海や海岸へ流れます。</p>
+			<p class="mt-5">つまり、河川を可視化すると日本列島が浮かび上がってくるのでは？という思考のもと、実行して作ったのが、このアプリケーションです。</p>
+			<h3 id="manual_h3" class="text-xl mt-5">出典</h3>
+			<p class="mt-5">・<a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W05.html"
+					target="_blank">国土数値情報
+					河川データ</a>、国土交通省のデータを加工・編集</p>
+			<p class="mt-5">・<a href="https://github.com/tabularmaps/areamap" target="_blank">都道府県カラム</a></p>
+			<p class="mt-5">・<a href="https://jpsearch.go.jp/item/tfam_art_db-3628"
+					target="_blank">冨嶽三十六景　神奈川沖浪裏</a>、ジャパンサーチ</p>
 
 		</div>
 	</center>
+
+	<div id="footer" class="text-center p-3">
+		<p class="text-xs"><a href="https://github.com/linkevery2s/quest-and-answer" target="_blank">src on
+				GitHub</a>.
+			<i class="fa-regular fa-copyright"></i> <a href="https://hitoshi2s.netlify.app/" target="_blank">齋藤 仁志</a>.
+			<a href="https://docs.google.com/forms/d/e/1FAIpQLSf-WMoBJRTdA1bmN_SmQ-bsNGeLs1l737d3c9BUNuErjH-KBw/viewform"
+				target="_blank">お問い合わせ</a> ver 1.0
+		</p>
+	</div>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 
 		gtag('config', 'G-MPP84V2NHB');
 	</script>
 
 </body>
+
 </html>
