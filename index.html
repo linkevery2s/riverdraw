@@ -18,6 +18,16 @@
 	<meta name="keywords" content="日本,川,河川,日本列島,geojson" />
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 	<link rel="icon" href="./apple-touch-icon.png">
+
+	<link rel="manifest" href="./manifest.json">
+	<script>
+	  if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('./service-worker.js').then(function () {
+		  console.log('Service Worker Registered');
+		});
+	  }
+	</script>
+
 	<script src="https://cdn.tailwindcss.com"></script>
 
 	<style>
@@ -35,7 +45,8 @@
 			background-position: top center;
 			background-repeat: no-repeat;
 			background-size: cover;
-			font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif
+			font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif;
+
 		}
 
 		/* iOS用  */
@@ -135,6 +146,7 @@
 		#menu div {
 			font-size: 0.65rem;
 			line-height: 2rem;
+			font-weight: bolder;
 		}
 
 		#menu {
