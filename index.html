@@ -21,11 +21,11 @@
 
 	<link rel="manifest" href="./manifest.json">
 	<script>
-	  if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('./service-worker.js').then(function () {
-		  console.log('Service Worker Registered');
-		});
-	  }
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('./service-worker.js').then(function () {
+				console.log('Service Worker Registered');
+			});
+		}
 	</script>
 
 	<script src="https://cdn.tailwindcss.com"></script>
@@ -47,6 +47,7 @@
 		#footer {
 			background: #1e50a2;
 			color: #ffffff;
+			font-weight: bolder;
 		}
 
 		#footer a {
@@ -125,6 +126,7 @@
 			font-size: 0.65rem;
 			line-height: 2rem;
 			font-weight: bolder;
+			font-family: "Meiryo", "Hiragino Maru Gothic Pro", sans-serif !important;
 		}
 
 		#menu {
@@ -157,6 +159,20 @@
 			padding: 0;
 			margin: 0;
 			height: 450px;
+		}
+
+		.sns-fb {
+			margin: 0 0 3px 5px;
+		}
+
+		.image_link{
+			color: #d4dcda;
+			font-size: 0.8rem !important;
+		}
+
+		.image_link a{
+			color: #d4dcda !important;
+			border-bottom: 1px dotted #d4dcda !important;
 		}
 	</style>
 	<script type="module">
@@ -226,11 +242,11 @@
 
 	<div class="lg:flex flex-row mb-5">
 
-		<div id="menu" class="basis-1/2 px-1 mt-3 md:ml-3">
+		<div id="menu" class="basis-1/2 px-1 lg:mt-3 md:ml-3">
 
 			<div class="grid grid-cols-7 grid-rows-7 gap-1">
 				<div id="hokkaido" onclick="prefselect(1)"
-					class="text-center p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">北海道</div>
+					class="text-center pt-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">北海道</div>
 				<div id="tohoku" onclick="prefselect(2)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mt-1 rounded-md">青森</div>
 				<div id="tohoku" onclick="prefselect(3)"
@@ -253,7 +269,7 @@
 					千葉</div>
 				<div id="kanto" onclick="prefselect(12)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					東京</div>
-				<div id="kanto" onclick="prefselect(13)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
+				<div id="kanto" onclick="prefselect(13)" class="text-center  pt-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					神奈川</div>
 				<div id="kanto" onclick="prefselect(14)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					埼玉</div>
@@ -284,11 +300,11 @@
 				<div id="kansai" onclick="prefselect(27)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">奈良</div>
 				<div id="kansai" onclick="prefselect(28)"
-					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">和歌山</div>
+					class="text-center pt-2 md:px-3 md:py-4 md:text-lg rounded-md">和歌山</div>
 				<div id="kansai" onclick="prefselect(29)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">兵庫</div>
 				<div id="kansai" onclick="prefselect(30)"
-					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">大阪府</div>
+					class="text-center pt-2 md:px-3 md:py-4 md:text-lg rounded-md">大阪府</div>
 				<div id="tyugoku" onclick="prefselect(31)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">鳥取</div>
 				<div id="tyugoku" onclick="prefselect(32)"
@@ -320,7 +336,7 @@
 				<div id="kyusyu" onclick="prefselect(45)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">熊本</div>
 				<div id="kyusyu" onclick="prefselect(46)"
-					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">鹿児島</div>
+					class="text-center pt-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">鹿児島</div>
 				<div id="kyusyu" onclick="prefselect(47)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg mb-1 rounded-md">沖縄</div>
 
@@ -329,7 +345,7 @@
 		</div>
 
 		<div class="basis-1/2 m-3 map">
-			<span id="river">地図をタップすると、ここにマップが表示されます。（ロードされるのに少し時間がかかります。）</span>
+			<span id="river" class="text-lg">地図をタップすると、ここにマップが表示されます。（ロードされるのに少し時間がかかります。）</span>
 		</div>
 
 	</div>
@@ -337,18 +353,29 @@
 	<center>
 		<div id="description" class="text-left p-5 mb-5">
 			<h3 id="manual_h3" class="text-xl">作ろうと思った「きっかけ」</h3>
-			<p class="mt-5">水は山から湧き出て、川を作り、そこを下り、海や海岸へ流れます。</p>
-			<p class="mt-5">つまり、河川を可視化すると日本列島が浮かび上がってくるのでは？という思考のもと、実行して作ったのが、このアプリケーションです。</p>
+			<img src="./river.jpg" width="100%"  class= "mt-5" alt="円原川の光芒の画像">
+			<p class="image_link" class="text-xs">円原川の光芒 © mi_irie <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">クリエイティブ・コモンズ・ライセンス（表示4.0 国際）</a>
+			</p>
+			<p class="mt-5 text-lg">水は山から湧き出て、川を作り、そこを下り、海や海岸へ流れます。</p>
+			<p class="mt-5 text-lg">つまり、河川を可視化すると日本列島が浮かび上がってくるのでは？という思考のもと、実行して作ったのが、このアプリケーションです。</p>
+			<h3 id="manual_h3" class="text-xl mt-5">インストール方法</h3>
+			<p class="mt-5 text-lg">PWAに対応しているので、iPhone、Androidともに、WEBブラウザの「ホーム画面に追加」からインストールできます。</p>
+			<img src="./install.jpg" width="100%" class="mt-5" alt="インストール方法の画像">
 			<h3 id="manual_h3" class="text-xl mt-5">出典</h3>
 			<p class="mt-5">・<a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W05.html"
 					target="_blank">国土数値情報
 					河川データ</a>、国土交通省のデータを加工・編集</p>
 			<p class="mt-5">・<a href="https://github.com/tabularmaps/areamap" target="_blank">都道府県カラム</a></p>
-			<p class="mt-5">・<a href="https://jpsearch.go.jp/item/tfam_art_db-3628"
-					target="_blank">冨嶽三十六景　神奈川沖浪裏</a>、ジャパンサーチ</p>
 
 		</div>
 	</center>
+
+	<div class="sns-fb">
+
+		<div class="fb-share-button" data-href="https://riverdraw47.netlify.app/" data-layout="button_count"
+			data-size="small"></div>
+
+	</div>
 
 	<div id="footer" class="text-center p-3">
 		<p class="text-xs"><a href="https://github.com/linkevery2s/quest-and-answer" target="_blank">src on
@@ -358,6 +385,11 @@
 				target="_blank">お問い合わせ</a> ver 1.0
 		</p>
 	</div>
+
+	<!-- Facebookシェアボタン -->
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v19.0"
+		nonce="Pm3nh7PB"></script>
 
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
