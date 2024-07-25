@@ -46,7 +46,7 @@
 <script src="./pref/data/tokushima.geojson"></script>
 <script type="module">
 
-  const { DeckGL, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator } = deck;
+  const { DeckGL, TileLayer, BitmapLayer, COORDINATE_SYSTEM } = deck;
 
   let lat; let lon; let zoom; let center;
 
@@ -54,9 +54,9 @@
   let hash_last;
 
   if (url_hash === "") {
-    lat = 33.8812;
-    lon = 134.19114;
-    zoom = 8;
+    lat = 37.300;
+    lon = 137.800;
+    zoom = 4.5;
     center = [];
 
   } else {
@@ -66,8 +66,7 @@
 
     lat = Number(hash_last[1].split("/")[1]);
     lon = Number(hash_last[1].split("/")[0]);
-
-    zoom = 1.5;
+    zoom = 8;
 
     center = [{
       "lat": lat,
@@ -76,6 +75,7 @@
 
   }
 
+  /* ベースマップ */
   const tilelayer = new TileLayer({
     data: 'https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
     minZoom: 0,
@@ -102,7 +102,8 @@
   let initialViewState = {
     latitude: lat,
     longitude: lon,
-    zoom: zoom
+    zoom: zoom,
+    minZoom: 4.5
   };
 
   const tooltip = (d) => {
@@ -112,7 +113,7 @@
 
     let html_tr;
 
-    html_tr = ["<table>", "<center>" + obj.properties.W05_004, "</table>"].join("\n");
+    html_tr = ["<table>", obj.properties.W05_004, "</table>"].join("\n");
 
     return {
       html: html_tr,
