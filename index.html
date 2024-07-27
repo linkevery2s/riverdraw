@@ -50,6 +50,21 @@
 			font-weight: bolder;
 		}
 
+		.new::before {
+			content: attr(data-en);
+			display: block;
+			color: #1e50a2;
+			font-size: 15px;
+		}
+
+		.new::after {
+			content: '';
+			display: block;
+			width: 40px;
+			height: 1px;
+			background-color: #1e50a2;
+		}
+
 		#footer a {
 			border-bottom: 1px dotted #ffffff;
 		}
@@ -122,7 +137,7 @@
 			color: #1e50a2;
 		}
 
-		.install{
+		.install {
 			border: 1px dotted #1e50a2;
 		}
 
@@ -168,20 +183,27 @@
 			margin: 0 0 3px 5px;
 		}
 
-		.image_link{
+		.image_link {
 			color: #887f7a;
 			font-size: 0.8rem !important;
 		}
 
-		.image_link a{
+		.image_link a {
 			color: #887f7a !important;
 			border-bottom: 1px dotted #887f7a !important;
 		}
 
-		.twoscreen{
+		.twoscreen {
 			height: 450px !important;
 			border: 1px solid #1e50a2;
 			width: 100%;
+		}
+
+		.dam {
+			height: 450px !important;
+			border: 1px solid #1e50a2;
+			width: 100%;
+			max-width: 800px;
 		}
 	</style>
 	<script type="module">
@@ -249,9 +271,13 @@
 		<h1 class="text-3xl py-4">日本の都道府県を<br>河川だけで描いてみる</h1>
 	</div>
 
+	<center>
+		<p class="new text-lg mx-3 mt-3" data-en="Select Prefecture">都道府県選択</p>
+	</center>
+
 	<div class="lg:flex flex-row mb-5">
 
-		<div id="menu" class="basis-1/2 px-1 lg:mt-3 lg:ml-3">
+		<div id="menu" class="basis-1/2 px-1 mt-3 lg:ml-3">
 
 			<div class="grid grid-cols-7 grid-rows-7 gap-1">
 				<div id="hokkaido" onclick="prefselect(1)"
@@ -278,7 +304,8 @@
 					千葉</div>
 				<div id="kanto" onclick="prefselect(12)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					東京</div>
-				<div id="kanto" onclick="prefselect(13)" class="text-center  pt-2 md:px-3 md:py-4 md:text-lg rounded-md">
+				<div id="kanto" onclick="prefselect(13)"
+					class="text-center  pt-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					神奈川</div>
 				<div id="kanto" onclick="prefselect(14)" class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">
 					埼玉</div>
@@ -359,15 +386,28 @@
 
 	</div>
 
-	<div class="div_twoscreen mx-3">
-	<iframe src="twoscreen.html" border="0" scrolling="no" class="twoscreen" frameborder="no"></iframe>
-	</div>
-
 	<center>
+		<p class="new text-lg mx-3" data-en="Two Screen">２画面連動</p>
+
+
+		<div class="div_twoscreen mx-3 mt-4 mb-4">
+			<iframe src="twoscreen.html" border="0" scrolling="no" class="twoscreen" frameborder="no"></iframe>
+		</div>
+
+
+		<p class="new text-lg mx-3" data-en="Japan Dam Map">日本全国ダムマップ</p>
+
+
+		<div class="div_dam mx-3 mt-4 mb-4">
+			<iframe src="./dam/index.html" border="0" scrolling="no" class="dam" frameborder="no"></iframe>
+		</div>
+
+
 		<div id="description" class="text-left p-5 mt-5 mb-5">
 			<h3 id="manual_h3" class="text-xl">作ろうと思った「きっかけ」</h3>
-			<img src="./river.jpg" width="100%"  class= "mt-5 mb-1" alt="円原川の光芒の画像">
-			<p class="image_link" class="text-xs">円原川の光芒 © mi_irie <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">クリエイティブ・コモンズ・ライセンス（表示4.0 国際）</a>
+			<img src="./river.jpg" width="100%" class="mt-5 mb-1" alt="円原川の光芒の画像">
+			<p class="image_link" class="text-xs">円原川の光芒 © mi_irie <a
+					href="https://creativecommons.org/licenses/by/4.0/" target="_blank">クリエイティブ・コモンズ・ライセンス（表示4.0 国際）</a>
 			</p>
 			<p class="mt-5 text-lg">水は山から湧き出て、川を作り、そこを下り、海や海岸へ流れます。</p>
 			<p class="mt-5 text-lg">つまり、河川を可視化すると日本列島が浮かび上がってくるのでは？という思考のもと、実行して作ったのが、このアプリケーションです。</p>
@@ -395,7 +435,8 @@
 				GitHub</a>.
 			<i class="fa-regular fa-copyright"></i> <a href="https://hitoshi2s.netlify.app/" target="_blank">齋藤 仁志</a>.
 			<a href="https://docs.google.com/forms/d/e/1FAIpQLSf-WMoBJRTdA1bmN_SmQ-bsNGeLs1l737d3c9BUNuErjH-KBw/viewform"
-				target="_blank">お問い合わせ</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank">CC BY 4.0</a>
+				target="_blank">お問い合わせ</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.ja"
+				target="_blank">CC BY 4.0</a>
 		</p>
 	</div>
 
