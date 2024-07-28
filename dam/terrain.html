@@ -46,6 +46,18 @@
       padding: .3em;
       border-radius: .5em;
     }
+
+    .deck-tooltip {
+      font-size: .7rem;
+      width: 180px;
+    }
+
+    @media screen and (min-width: 1024px) {
+      .deck-tooltip {
+        font-size: 1rem;
+        width: 300px;
+      }
+    }
   </style>
 
 </head>
@@ -234,14 +246,13 @@
       }
 
 
-      const html_tr = ["<table>", popup, "</table>"].join("\n");
+      const html_tr = ["<table class='table_info'>", popup, "</table>"].join("\n");
 
       return {
         html: html_tr,
         style: {
           background: "rgba(255,255,255,0.7)",
           color: "#000000",
-          width: "300px"
         }
       };
     };
@@ -252,9 +263,9 @@
     let hash_last;
 
     if (url_hash === "") {
-      lat = 34.561;
+      lat = 35.561;
       lon = 137.495;
-      zoom = 6.0;
+      zoom = 7.0;
       pitch = 50;
       bearing = 0;
 
