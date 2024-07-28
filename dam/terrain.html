@@ -97,13 +97,151 @@
       if (!d || !d.object) return null;
       let obj = d.object;
 
-      const html_tr = ["<table>", "都道府県名：" + obj.prefectures + "<br>県庁所在地：" + obj.offices, "</table>"].join("\n");
+      let popup;
+
+      console.log(obj);
+
+      if (obj && obj.W01_001) {
+        popup = "名称：" + obj.W01_001;
+      }
+      if (obj && obj.W01_013) {
+        popup += "<br>住所：" + obj.W01_013;
+      }
+      if (obj && obj.W01_003) {
+        popup += '<br>水系名：' + obj.W01_003;
+      }
+
+      if (obj && obj.W01_004) {
+        popup += '<br>河川名：' + obj.W01_004;
+      }
+
+      if (obj && obj.W01_005) {
+
+        if (obj.W01_005 == "1") {
+          popup += '<br>ダム形式：アーチダム';
+        }
+        if (obj.W01_005 == "2") {
+          popup += '<br>ダム形式：バットレスダム';
+        }
+        if (obj.W01_005 == "3") {
+          popup += '<br>ダム形式：アースダム';
+        }
+        if (obj.W01_005 == "4") {
+          popup += '<br>ダム形式：アスファルトフェイシングダム';
+        }
+        if (obj.W01_005 == "5") {
+          popup += '<br>ダム形式：明日ダルとコアダム';
+        }
+        if (obj.W01_005 == "6") {
+          popup += '<br>ダム形式：フローティングゲートダム（可動堰）';
+        }
+        if (obj.W01_005 == "7") {
+          popup += '<br>ダム形式：重力式コンクリートダム';
+        }
+        if (obj.W01_005 == "8") {
+          popup += '<br>ダム形式：重力式アーチダム';
+        }
+        if (obj.W01_005 == "9") {
+          popup += '<br>ダム形式：重力式コンクリートダム・フィルダム複合ダム';
+        }
+        if (obj.W01_005 == "10") {
+          popup += '<br>ダム形式：中空重力式コンクリートダム';
+        }
+        if (obj.W01_005 == "11") {
+          popup += '<br>ダム形式：マルティプルアーチダム';
+        }
+        if (obj.W01_005 == "12") {
+          popup += '<br>ダム形式：ロックフィルダム';
+        }
+        if (obj.W01_005 == "13") {
+          popup += '<br>ダム形式：台形CSGダム';
+        }
+
+      }
+
+      if (obj && obj.W01_006) {
+        //popup += '<br>河川名：' + obj.W01_006;
+
+        let motib = obj.W01_006.split(',');
+
+        if (motib[0] == "1") {
+          popup += '<br>使用目的：洪水調節、農地防災';
+        }
+        if (motib[0] == "2") {
+          popup += '<br>使用目的：不特定用水、河川維持用水';
+        }
+        if (motib[0] == "3") {
+          popup += '<br>使用目的：灌漑、特定(新規)灌漑用水';
+        }
+        if (motib[0] == "4") {
+          popup += '<br>使用目的：上水道用水';
+        }
+        if (motib[0] == "5") {
+          popup += '<br>使用目的：工業用水道用水';
+        }
+        if (motib[0] == "6") {
+          popup += '<br>使用目的：発電';
+        }
+        if (motib[0] == "7") {
+          popup += '<br>使用目的：消流雪用水';
+        }
+        if (motib[0] == "8") {
+          popup += '<br>使用目的：レクリエーション';
+        }
+
+
+        for (let i = 1; i < motib.length; i++) {
+
+          if (motib[i] == "1") {
+            popup += '、農地防災';
+          }
+          if (motib[i] == "2") {
+            popup += '、不特定用水、河川維持用水';
+          }
+          if (motib[i] == "3") {
+            popup += '、灌漑、特定(新規)灌漑用水';
+          }
+          if (motib[i] == "4") {
+            popup += '、上水道用水';
+          }
+          if (motib[i] == "5") {
+            popup += '、工業用水道用水';
+          }
+          if (motib[i] == "6") {
+            popup += '、発電';
+          }
+          if (motib[i] == "7") {
+            popup += '、消流雪用水';
+          }
+          if (motib[i] == "8") {
+            popup += '、レクリエーション';
+          }
+
+        }
+
+      }
+
+      if (obj && obj.W01_007) {
+        popup += '<br>ダム規模（堤高）：' + obj.W01_007 + 'm';
+      }
+
+      if (obj && obj.W01_010) {
+        popup += '<br>総貯水量：' + obj.W01_010 + '千m3';
+      }
+
+      if (obj && obj.W01_012) {
+        popup += '<br>竣工年：' + obj.W01_012 + "年";
+      }
+
+
+      const html_tr = ["<table>", popup, "</table>"].join("\n");
 
       return {
         html: html_tr,
         style: {
           background: "rgba(255,255,255,0.7)",
-          color: "#000000"
+          color: "#000000",
+          width: "300px"
         }
       };
     };
@@ -114,9 +252,9 @@
     let hash_last;
 
     if (url_hash === "") {
-      lat = 35.666;
-      lon = 139.779;
-      zoom = 8.5;
+      lat = 34.561;
+      lon = 137.495;
+      zoom = 6.0;
       pitch = 50;
       bearing = 0;
 
@@ -157,7 +295,7 @@
       controller: {
         touchRotate: true
       },
-      getTooltip: ({object}) => object && object.W01_001,
+      getTooltip: tooltip,
       layers: [
         layer, offices
       ]
