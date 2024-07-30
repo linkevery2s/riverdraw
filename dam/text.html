@@ -58,17 +58,19 @@
       padding: .3em;
       border-radius: .5em;
     }
+
+    .deck-tooltip {
+      font-size: .7rem;
+      width: 180px;
+    }
+
+    @media screen and (min-width: 1024px) {
+      .deck-tooltip {
+        font-size: 1rem;
+        width: 300px;
+      }
+    }
   </style>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-MPP84V2NHB');
-  </script>
 
 </head>
 
@@ -81,128 +83,291 @@
     <div class="japan_terrain"><i class="fa-solid fa-lg fa-image"></i></div>
   </span>
 
-</body>
+  <script type="module">
+    const { DeckGL, GeoJsonLayer, ScenegraphLayer, ScatterplotLayer } = deck;
 
-<script type="module">
-  const { DeckGL, GeoJsonLayer, ScenegraphLayer } = deck;
+    let lat; let lon; let zoom; let pitch; let bearing;
 
-  let lat; let lon; let zoom; let pitch; let bearing;
+    const url_hash = location.hash;
+    let hash_last;
 
-  const url_hash = location.hash;
-  let hash_last;
+    if (url_hash === "") {
+      lat = 35.666;
+      lon = 139.779;
+      zoom = 8.5;
+      pitch = 50;
+      bearing = 0;
 
-  if (url_hash === "") {
-    lat = 35.666;
-    lon = 139.779;
-    zoom = 8.5;
-    pitch = 50;
-    bearing = 0;
+    } else {
+      console.log(url_hash);
 
-  } else {
-    console.log(url_hash);
+      hash_last = url_hash.split("!");
 
-    hash_last = url_hash.split("!");
+      lat = Number(hash_last[1].split("/")[0]);
+      lon = Number(hash_last[1].split("/")[1]);
+      zoom = Number(hash_last[1].split("/")[2]);
+      pitch = Number(hash_last[1].split("/")[3]);
+      bearing = Number(hash_last[1].split("/")[4]);
 
-    lat = Number(hash_last[1].split("/")[0]);
-    lon = Number(hash_last[1].split("/")[1]);
-    zoom = Number(hash_last[1].split("/")[2]);
-    pitch = Number(hash_last[1].split("/")[3]);
-    bearing = Number(hash_last[1].split("/")[4]);
+    }
 
-  }
-
-  const INITIAL_VIEW_STATE = {
-    longitude: lon,
-    latitude: lat,
-    zoom: zoom,
-    minZoom: 3,
-    pitch: pitch,
-    maxPitch: 85,
-    bearing: bearing
-  };
-
-  const tooltip = (d) => {
-
-    if (!d || !d.object) return null;
-    let obj = d.object;
-
-    const html_tr = ["<table>", "都道府県名：" + obj.properties.name + "<br>県庁所在地：" + obj.properties.offices, "</table>"].join("\n");
-
-    return {
-      html: html_tr,
-      style: {
-        background: "rgba(255,255,255,0.7)",
-        color: "#000000"
-      }
+    const INITIAL_VIEW_STATE = {
+      longitude: lon,
+      latitude: lat,
+      zoom: zoom,
+      minZoom: 3,
+      pitch: pitch,
+      maxPitch: 85,
+      bearing: bearing
     };
-  };
 
-  const prefectures = new GeoJsonLayer({
-    id: 'prefectures',
-    data: "./data/prefectures.geojson",
-    filled: true,
-    lineWidthMinPixels: 2,
-    getFillColor: [255, 255, 255],
-    getLineColor: [255, 255, 255],
-    getLineWidth: 2,
-    opacity: 0.02,
-    pickable: true,
-    autoHighlight: true,
-    highlightColor: [230, 0, 51, 128]
-  });
+    const tooltip = (d) => {
 
-  const prefectures_line = new GeoJsonLayer({
-    id: 'prefectures_line',
-    data: "./data/prefectures_line.geojson",
-    filled: true,
-    lineWidthMinPixels: 2,
-    getFillColor: [255, 255, 255],
-    getLineColor: [255, 255, 255],
-    getLineWidth: 2,
-    opacity: 1,
-    pickable: false
-  });
+      if (!d || !d.object) return null;
+      let obj = d.object;
 
-  const offices = new ScenegraphLayer({
-    id: 'scenegraph-layer',
-    data: "./data/prefectures.json",
-    pickable: false,
-    scenegraph: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoxAnimated/glTF-Binary/BoxAnimated.glb',
-    getPosition: d => [Number(d.lng), Number(d.lat)],
-    getOrientation: d => [0, Math.random() * 180, 90],
-    _animations: { '*': { speed: 5 } },
-    sizeScale: 3000,
-    _lighting: 'pbr'
-  });
+      let popup;
 
-  const deckgl = new DeckGL({
-    container: 'container',
-    mapStyle: './data/basemap_tiri_photo.json',
-    initialViewState: INITIAL_VIEW_STATE,
-    onViewStateChange: ({ viewState }) => {
+      console.log(obj);
 
-      zoom = Math.round(viewState.zoom * 10) / 10;
-      lat = Math.round(viewState.latitude * 1000) / 1000;
-      lon = Math.round(viewState.longitude * 1000) / 1000;
-      pitch = Math.round(viewState.pitch * 10) / 10;
-      bearing = Math.round(viewState.bearing * 100) / 100;
+      if (obj && obj.W01_001) {
+        popup = "名称：" + obj.W01_001;
+      }
+      if (obj && obj.W01_013) {
+        popup += "<br>住所：" + obj.W01_013;
+      }
+      if (obj && obj.W01_003) {
+        popup += '<br>水系名：' + obj.W01_003;
+      }
 
-    },
-    controller: {
-      touchRotate: true
-    },
-    getTooltip: tooltip,
-    layers: [
-      prefectures_line, prefectures, offices
-    ]
-  });
+      if (obj && obj.W01_004) {
+        popup += '<br>河川名：' + obj.W01_004;
+      }
 
-  const japan_terrain = document.querySelector('.japan_terrain');
+      if (obj && obj.W01_005) {
 
-  japan_terrain.addEventListener('click', () => {
-    location.href = "./terrain.html#!" + lat + "/" + lon + "/" + zoom + "/" + pitch + "/" + bearing;
-  });
+        if (obj.W01_005 == "1") {
+          popup += '<br>ダム形式：アーチダム';
+        }
+        if (obj.W01_005 == "2") {
+          popup += '<br>ダム形式：バットレスダム';
+        }
+        if (obj.W01_005 == "3") {
+          popup += '<br>ダム形式：アースダム';
+        }
+        if (obj.W01_005 == "4") {
+          popup += '<br>ダム形式：アスファルトフェイシングダム';
+        }
+        if (obj.W01_005 == "5") {
+          popup += '<br>ダム形式：明日ダルとコアダム';
+        }
+        if (obj.W01_005 == "6") {
+          popup += '<br>ダム形式：フローティングゲートダム（可動堰）';
+        }
+        if (obj.W01_005 == "7") {
+          popup += '<br>ダム形式：重力式コンクリートダム';
+        }
+        if (obj.W01_005 == "8") {
+          popup += '<br>ダム形式：重力式アーチダム';
+        }
+        if (obj.W01_005 == "9") {
+          popup += '<br>ダム形式：重力式コンクリートダム・フィルダム複合ダム';
+        }
+        if (obj.W01_005 == "10") {
+          popup += '<br>ダム形式：中空重力式コンクリートダム';
+        }
+        if (obj.W01_005 == "11") {
+          popup += '<br>ダム形式：マルティプルアーチダム';
+        }
+        if (obj.W01_005 == "12") {
+          popup += '<br>ダム形式：ロックフィルダム';
+        }
+        if (obj.W01_005 == "13") {
+          popup += '<br>ダム形式：台形CSGダム';
+        }
 
-</script>
+      }
+
+      if (obj && obj.W01_006) {
+        //popup += '<br>河川名：' + obj.W01_006;
+
+        let motib = obj.W01_006.split(',');
+
+        if (motib[0] == "1") {
+          popup += '<br>使用目的：洪水調節、農地防災';
+        }
+        if (motib[0] == "2") {
+          popup += '<br>使用目的：不特定用水、河川維持用水';
+        }
+        if (motib[0] == "3") {
+          popup += '<br>使用目的：灌漑、特定(新規)灌漑用水';
+        }
+        if (motib[0] == "4") {
+          popup += '<br>使用目的：上水道用水';
+        }
+        if (motib[0] == "5") {
+          popup += '<br>使用目的：工業用水道用水';
+        }
+        if (motib[0] == "6") {
+          popup += '<br>使用目的：発電';
+        }
+        if (motib[0] == "7") {
+          popup += '<br>使用目的：消流雪用水';
+        }
+        if (motib[0] == "8") {
+          popup += '<br>使用目的：レクリエーション';
+        }
+
+
+        for (let i = 1; i < motib.length; i++) {
+
+          if (motib[i] == "1") {
+            popup += '、農地防災';
+          }
+          if (motib[i] == "2") {
+            popup += '、不特定用水、河川維持用水';
+          }
+          if (motib[i] == "3") {
+            popup += '、灌漑、特定(新規)灌漑用水';
+          }
+          if (motib[i] == "4") {
+            popup += '、上水道用水';
+          }
+          if (motib[i] == "5") {
+            popup += '、工業用水道用水';
+          }
+          if (motib[i] == "6") {
+            popup += '、発電';
+          }
+          if (motib[i] == "7") {
+            popup += '、消流雪用水';
+          }
+          if (motib[i] == "8") {
+            popup += '、レクリエーション';
+          }
+
+        }
+
+      }
+
+      if (obj && obj.W01_007) {
+        popup += '<br>ダム規模（堤高）：' + obj.W01_007 + 'm';
+      }
+
+      if (obj && obj.W01_010) {
+        popup += '<br>総貯水量：' + obj.W01_010 + '千m3';
+      }
+
+      if (obj && obj.W01_012) {
+        popup += '<br>竣工年：' + obj.W01_012 + "年";
+      }
+
+
+      const html_tr = ["<table class='table_info'>", popup, "</table>"].join("\n");
+
+      return {
+        html: html_tr,
+        style: {
+          background: "rgba(255,255,255,0.9)",
+          color: "#000000",
+        }
+      };
+    };
+
+    /*const prefectures = new GeoJsonLayer({
+      id: 'prefectures',
+      data: "./data/prefectures.geojson",
+      filled: true,
+      lineWidthMinPixels: 2,
+      getFillColor: [255, 255, 255],
+      getLineColor: [255, 255, 255],
+      getLineWidth: 2,
+      opacity: 0.02,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [230, 0, 51, 128]
+    });*/
+
+    const prefectures_line = new GeoJsonLayer({
+      id: 'prefectures_line',
+      data: "./prefectures_line.geojson",
+      filled: true,
+      lineWidthMinPixels: 2,
+      getFillColor: [255, 255, 255],
+      getLineColor: [255, 255, 255],
+      getLineWidth: 2,
+      opacity: 1,
+      pickable: false
+    });
+
+    /*const offices = new ScenegraphLayer({
+      id: 'scenegraph-layer',
+      data: "./dam.json",
+      pickable: true,
+      scenegraph: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoxAnimated/glTF-Binary/BoxAnimated.glb',
+      getPosition: d => [Number(d.lon), Number(d.lat)],
+      getOrientation: d => [0, Math.random() * 180, 90],
+      _animations: { '*': { speed: 5 } },
+      sizeScale: 3000,
+      _lighting: 'pbr'
+    });*/
+
+    const offices = new ScatterplotLayer({
+      id: 'scatterplot-layer',
+      data: "./dam.json",
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 6,
+      radiusMinPixels: 10,
+      radiusMaxPixels: 15,
+      lineWidthMinPixels: 0,
+      getPosition: d => [Number(d.lon), Number(d.lat)],
+      getRadius: d => 30,
+      getFillColor: d => [254, 242, 99]
+    });
+
+    const deckgl = new DeckGL({
+      container: 'container',
+      mapStyle: './basemap_tiri_photo.json',
+      initialViewState: INITIAL_VIEW_STATE,
+      onViewStateChange: ({ viewState }) => {
+
+        zoom = Math.round(viewState.zoom * 10) / 10;
+        lat = Math.round(viewState.latitude * 1000) / 1000;
+        lon = Math.round(viewState.longitude * 1000) / 1000;
+        pitch = Math.round(viewState.pitch * 10) / 10;
+        bearing = Math.round(viewState.bearing * 100) / 100;
+
+      },
+      controller: {
+        touchRotate: true
+      },
+      getTooltip: tooltip,
+      layers: [
+        prefectures_line, offices
+      ]
+    });
+
+    const japan_terrain = document.querySelector('.japan_terrain');
+
+    japan_terrain.addEventListener('click', () => {
+      location.href = "./terrain.html#!" + lat + "/" + lon + "/" + zoom + "/" + pitch + "/" + bearing;
+    });
+
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-MPP84V2NHB');
+  </script>
+
+</body>
 
 </html>

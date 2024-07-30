@@ -210,7 +210,7 @@
 	<script type="module">
 
 		window.prefselect = (x, y, z) => {
-			document.getElementById("river").innerHTML = '<iframe width="100%" scrolling="no" frameborder="no" src="./map.html#!' + x + "/" + y + "/" + z + '"></iframe>';
+			document.getElementById("river").innerHTML = '<iframe class= "map_view" width="100%" scrolling="no" frameborder="no" src="./map.html#!' + x + "/" + y + "/" + z + '"></iframe>';
 			document.querySelector(".map").style.padding = "0";
 			document.getElementById("river_two").innerHTML = '<iframe width="100%" scrolling="no" frameborder="no" src="./twoscreen.html#!' + x + "/" + y + "/" + z + '"></iframe>';
 			document.querySelector(".div_twoscreen").style.padding = "0";
@@ -311,7 +311,7 @@
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">兵庫</div>
 				<div id="kansai" onclick="prefselect(135.511,34.692,30)"
 					class="text-center pt-2 md:px-3 md:py-4 md:text-lg rounded-md">大阪府</div>
-				<div id="tyugoku" onclick="pprefselect(133.786,35.313,31)"
+				<div id="tyugoku" onclick="prefselect(133.786,35.313,31)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">鳥取</div>
 				<div id="tyugoku" onclick="prefselect(133.55,34.94,32)"
 					class="text-center  p-2 md:px-3 md:py-4 md:text-lg rounded-md">岡山</div>
@@ -360,7 +360,7 @@
 		<p class="new text-lg mx-3" data-en="Two Screen">２画面連動</p>
 
 
-		<div class="div_twoscreen mx-3 mt-4 mb-4 text-left">
+		<div class="div_twoscreen mx-3 mt-4 mb-7 text-left">
 			<span id="river_two" class="text-sm">都道府県を選択すると、ここにマップが表示されます。（ロードされるのに少し時間がかかります。）</span>
 		</div>
 
