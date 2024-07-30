@@ -9,8 +9,6 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="./L.Map.Sync.js"></script>
 
-    <script src='./pref/data/aichi.geojson'></script>
-
     <style>
         html,
         body {
@@ -36,11 +34,36 @@
             padding: 0;
         }
     </style>
-    <script>
+    <script type="module">
 
-        /* 地図初期設定 */
-        let lat = 38.132227;
-        let lng = 139.437103;
+        let lat; let lon; let zoom; let center; let number; let data;
+
+        const url_hash = location.hash;
+        let hash_last;
+
+        if (url_hash === "") {
+            lat = 37.300;
+            lon = 137.800;
+            zoom = 6;
+            center = [lat, lon];
+            data = [];
+
+        } else {
+            console.log(url_hash);
+
+            hash_last = url_hash.split("!");
+
+            lat = Number(hash_last[1].split("/")[1]);
+            lon = Number(hash_last[1].split("/")[0]);
+            number = Number(hash_last[1].split("/")[2]);
+            zoom = 6;
+
+            center = [lat, lon];
+
+            const res = await fetch('./data/' + number + '.geojson');
+            data = await res.json();
+
+        }
 
         const tiri = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png', {
             //attribution: '&copy; <a href="http://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'
@@ -69,56 +92,56 @@
 
         // const overlayMaps = { "洪水浸水想定区域（想定最大規模）": soutei };
 
-        function ini() {
 
-            const map_left = L.map('map_left', {
-                center: [lat, lng],
-                zoom: 6,
-                maxZoom: 15,
-                layers: tiri,
-                zoomControl: false
-            });
 
-            let geo_k = (feature, layer) => {
-                let popup;
-                if (feature.properties && feature.properties.W05_004) {
-                    popup = "河川名：" + feature.properties.W05_004;
-                }
+        const map_left = L.map('map_left', {
+            center: center,
+            zoom: zoom,
+            maxZoom: 15,
+            layers: tiri,
+            zoomControl: false
+        });
 
-                layer.bindPopup(popup);
-
+        let geo_k = (feature, layer) => {
+            let popup;
+            if (feature.properties && feature.properties.W05_004) {
+                popup = feature.properties.W05_004;
             }
 
-            const pref = L.geoJson(aichi, { onEachFeature: geo_k });
-
-            map_left.addLayer(pref);
-
-            const map_right = L.map('map_right', {
-                layers: [base1],
-                center: [lat, lng],
-                zoom: 6,
-                maxZoom: 15,
-                zoomControl: false
-            });
-
-            //L.control.layers(baseMaps, overlayMaps).addTo(map_right);
-
-            L.control.layers(baseMaps).addTo(map_right);
-
-            map_left.attributionControl.setPosition('bottomleft')
-            map_right.attributionControl.setPosition('bottomleft')
-
-            /* 地図連動 */
-            map_left.sync(map_right, { syncCursor: true });
-            map_right.sync(map_left, { syncCursor: true });
+            layer.bindPopup(popup);
 
         }
+
+        const pref = L.geoJson(data, { onEachFeature: geo_k });
+
+        map_left.addLayer(pref);
+
+        const map_right = L.map('map_right', {
+            layers: [base1],
+            center: center,
+            zoom: zoom,
+            maxZoom: 15,
+            zoomControl: false
+        });
+
+        //L.control.layers(baseMaps, overlayMaps).addTo(map_right);
+
+        L.control.layers(baseMaps).addTo(map_right);
+
+        map_left.attributionControl.setPosition('bottomleft')
+        map_right.attributionControl.setPosition('bottomleft')
+
+        /* 地図連動 */
+        map_left.sync(map_right, { syncCursor: true });
+        map_right.sync(map_left, { syncCursor: true });
+
+
     </script>
-    <title>日本の地形（２画面表示）</title>
+    <title>２画面連動</title>
 
 </head>
 
-<body onLoad='ini()'>
+<body>
 
     <div id="map_left"></div>
     <div id="map_right"></div>
