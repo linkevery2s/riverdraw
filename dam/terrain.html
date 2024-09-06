@@ -13,6 +13,9 @@
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -52,6 +55,27 @@
       width: 180px;
     }
 
+    .button {
+      cursor: pointer;
+      color: #000000;
+      background: rgba(255, 255, 255, .8);
+      border: 1px solid #000000;
+      padding: .3em;
+      border-radius: .5em;
+      border: 1px solid #000000;
+    }
+
+    .button2 {
+      cursor: pointer;
+      color: #000000;
+      background: rgba(255, 255, 255, .8);
+      border: 1px solid #000000;
+      padding: .3em .4em .3em .4em;
+      display: none;
+      border-radius: .5em;
+      border: 1px solid #000000;
+    }
+
     @media screen and (min-width: 1024px) {
       .deck-tooltip {
         font-size: 1rem;
@@ -67,6 +91,8 @@
   <!-- 日本の地形メニュー -->
   <span class="japan_side_menu">
     <div class="japan_text"><i class="fa-solid fa-lg fa-font"></i></div>
+    <div class="button mt-3" id="button"><i class="fa-solid fa-lg fa-rotate"></i></div>
+    <div class="button2 mt-3" id="button2"><i class="fa-solid fa-lg fa-stop"></i></div>
   </span>
 
   <script type="module">
@@ -282,7 +308,7 @@
 
     }
 
-    const INITIAL_VIEW_STATE = {
+    let initialViewState = {
       longitude: lon,
       latitude: lat,
       zoom: zoom,
@@ -292,9 +318,15 @@
       bearing: bearing
     };
 
-    new deck.Deck({
-      initialViewState: INITIAL_VIEW_STATE,
+    const deckgl = new deck.Deck({
+      initialViewState: initialViewState,
       onViewStateChange: ({ viewState }) => {
+
+        initialViewState.longitude = viewState.longitude;
+        initialViewState.latitude = viewState.latitude;
+        initialViewState.zoom = viewState.zoom;
+        initialViewState.pitch = viewState.pitch;
+        initialViewState.bearing = viewState.bearing;
 
         zoom = Math.round(viewState.zoom * 10) / 10;
         lat = Math.round(viewState.latitude * 1000) / 1000;
@@ -312,21 +344,49 @@
       ]
     });
 
+    let rotateCamera = () => {
+      initialViewState = {
+        ...initialViewState,
+        bearing: initialViewState.bearing - 10,
+        transitionDuration: 1000,
+        transitionInterpolator: new deck.LinearInterpolator(['bearing']),
+        onTransitionEnd: rotateCamera
+      };
+      deckgl.setProps({ initialViewState });
+    };
+
+    let stop = () => {
+      initialViewState = {
+        ...initialViewState,
+        bearing: initialViewState.bearing - 0.01,
+        transitionDuration: 0,
+        transitionInterpolator: new deck.LinearInterpolator(['bearing']),
+        onTransitionEnd: stop
+      };
+      deckgl.setProps({ initialViewState });
+
+    };
+
     const japan_text = document.querySelector('.japan_text');
 
     japan_text.addEventListener('click', () => {
       location.href = "./text.html#!" + lat + "/" + lon + "/" + zoom + "/" + pitch + "/" + bearing;
     });
-  </script>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    const button = document.querySelector('.button');
+    const button2 = document.querySelector('.button2');
+    button.addEventListener('click', () => {
+      rotateCamera();
+      $("#button").hide();
+      $("#button2").show();
+    });
 
-    gtag('config', 'G-MPP84V2NHB');
+    button2.addEventListener('click', () => {
+      stop();
+      $("#button2").hide();
+      $("#button").show();
+    });
+
   </script>
 
 </body>

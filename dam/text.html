@@ -17,6 +17,9 @@
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style type="text/css">
@@ -64,6 +67,27 @@
       width: 180px;
     }
 
+    .button {
+      cursor: pointer;
+      color: #000000;
+      background: rgba(255, 255, 255, .8);
+      border: 1px solid #000000;
+      padding: .3em;
+      border-radius: .5em;
+      border: 1px solid #000000;
+    }
+
+    .button2 {
+      cursor: pointer;
+      color: #000000;
+      background: rgba(255, 255, 255, .8);
+      border: 1px solid #000000;
+      padding: .3em .4em .3em .4em;
+      display: none;
+      border-radius: .5em;
+      border: 1px solid #000000;
+    }
+
     @media screen and (min-width: 1024px) {
       .deck-tooltip {
         font-size: 1rem;
@@ -81,6 +105,8 @@
   <!-- 日本の地形メニュー -->
   <span class="japan_side_menu">
     <div class="japan_terrain"><i class="fa-solid fa-lg fa-image"></i></div>
+    <div class="button mt-3" id="button"><i class="fa-solid fa-lg fa-rotate"></i></div>
+    <div class="button2 mt-3" id="button2"><i class="fa-solid fa-lg fa-stop"></i></div>
   </span>
 
   <script type="module">
@@ -111,7 +137,7 @@
 
     }
 
-    const INITIAL_VIEW_STATE = {
+    let initialViewState = {
       longitude: lon,
       latitude: lat,
       zoom: zoom,
@@ -274,20 +300,6 @@
       };
     };
 
-    /*const prefectures = new GeoJsonLayer({
-      id: 'prefectures',
-      data: "./data/prefectures.geojson",
-      filled: true,
-      lineWidthMinPixels: 2,
-      getFillColor: [255, 255, 255],
-      getLineColor: [255, 255, 255],
-      getLineWidth: 2,
-      opacity: 0.02,
-      pickable: true,
-      autoHighlight: true,
-      highlightColor: [230, 0, 51, 128]
-    });*/
-
     const prefectures_line = new GeoJsonLayer({
       id: 'prefectures_line',
       data: "./prefectures_line.geojson",
@@ -300,17 +312,6 @@
       pickable: false
     });
 
-    /*const offices = new ScenegraphLayer({
-      id: 'scenegraph-layer',
-      data: "./dam.json",
-      pickable: true,
-      scenegraph: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoxAnimated/glTF-Binary/BoxAnimated.glb',
-      getPosition: d => [Number(d.lon), Number(d.lat)],
-      getOrientation: d => [0, Math.random() * 180, 90],
-      _animations: { '*': { speed: 5 } },
-      sizeScale: 3000,
-      _lighting: 'pbr'
-    });*/
 
     const offices = new ScatterplotLayer({
       id: 'scatterplot-layer',
@@ -331,8 +332,14 @@
     const deckgl = new DeckGL({
       container: 'container',
       mapStyle: './basemap_tiri_photo.json',
-      initialViewState: INITIAL_VIEW_STATE,
+      initialViewState: initialViewState,
       onViewStateChange: ({ viewState }) => {
+
+        initialViewState.longitude = viewState.longitude;
+        initialViewState.latitude = viewState.latitude;
+        initialViewState.zoom = viewState.zoom;
+        initialViewState.pitch = viewState.pitch;
+        initialViewState.bearing = viewState.bearing;
 
         zoom = Math.round(viewState.zoom * 10) / 10;
         lat = Math.round(viewState.latitude * 1000) / 1000;
@@ -350,22 +357,50 @@
       ]
     });
 
+    let rotateCamera = () => {
+      initialViewState = {
+        ...initialViewState,
+        bearing: initialViewState.bearing - 10,
+        transitionDuration: 1000,
+        transitionInterpolator: new deck.LinearInterpolator(['bearing']),
+        onTransitionEnd: rotateCamera
+      };
+      deckgl.setProps({ initialViewState });
+    };
+
+    let stop = () => {
+      initialViewState = {
+        ...initialViewState,
+        bearing: initialViewState.bearing - 0.01,
+        transitionDuration: 0,
+        transitionInterpolator: new deck.LinearInterpolator(['bearing']),
+        onTransitionEnd: stop
+      };
+      deckgl.setProps({ initialViewState });
+
+    };
+
     const japan_terrain = document.querySelector('.japan_terrain');
 
     japan_terrain.addEventListener('click', () => {
       location.href = "./terrain.html#!" + lat + "/" + lon + "/" + zoom + "/" + pitch + "/" + bearing;
     });
 
-  </script>
+    const button = document.querySelector('.button');
+    const button2 = document.querySelector('.button2');
+    button.addEventListener('click', () => {
+      rotateCamera();
+      $("#button").hide();
+      $("#button2").show();
+    });
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    button2.addEventListener('click', () => {
+      stop();
+      $("#button2").hide();
+      $("#button").show();
+    });
 
-    gtag('config', 'G-MPP84V2NHB');
+
   </script>
 
 </body>
